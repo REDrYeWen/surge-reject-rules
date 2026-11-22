@@ -1,6 +1,6 @@
 # 广告拦截项目（ads-project）
 
-拦截库的第二个项目：汇总 7 个广告拦截上游 + 用户粘贴规则，合并成一份 DOMAIN-SET 成品与一份附加 RULE-SET。每 15 天与基础库一并更新（重新下载上游、比较新增、运行 build-ads-merged.py 重新合并）。
+拦截库的第二个项目：汇总 7 个广告拦截上游 + 用户粘贴规则 + 用户旧合并表「碎」的独有部分，合并成一份 DOMAIN-SET 成品与一份附加 RULE-SET。每 15 天与基础库一并更新（重新下载上游、比较新增、运行 build-ads-merged.py 重新合并）。
 
 ## 在 Surge 中怎么引用（推荐方式）
 
@@ -12,8 +12,8 @@ DOMAIN-SET,<ads-domain-set-part3.txt 的地址>,REJECT
 RULE-SET,<ads-extra-ruleset.list 的地址>,REJECT
 ```
 
-- `merged/ads-domain-set-part1~3.txt`（合计 241,413 条）：纯域名部分。带点前缀 `.example.com` = 该域名及全部子域名（等价 DOMAIN-SUFFIX）；不带点 = 精确匹配（等价 DOMAIN）。DOMAIN-SET 专为十万级大表设计，Surge 会预建索引，查询速度不随条数线性下降。因 GitHub 连接器对单次推送体积有限制，域名集按每份 ≤110,000 条切分为 3 份，引用时三行都要写。
-- `merged/ads-extra-ruleset.list`（688 行）：DOMAIN-SET 表达不了的类型——DOMAIN-KEYWORD 119 条、DOMAIN-WILDCARD 409 条、IP-CIDR(6) 109 条、URL-REGEX/USER-AGENT 等 43 条。
+- `merged/ads-domain-set-part1~3.txt`（合计 254,147 条，2026-11-22 更新）：纯域名部分。带点前缀 `.example.com` = 该域名及全部子域名（等价 DOMAIN-SUFFIX）；不带点 = 精确匹配（等价 DOMAIN）。DOMAIN-SET 专为十万级大表设计，Surge 会预建索引，查询速度不随条数线性下降。因 GitHub 连接器对单次推送体积有限制，域名集按每份 ≤110,000 条切分为 3 份，引用时三行都要写。
+- `merged/ads-extra-ruleset.list`（681 条规则）：DOMAIN-SET 表达不了的类型——DOMAIN-KEYWORD 119 条、DOMAIN-WILDCARD 410 条、IP-CIDR(6) 109 条、URL-REGEX/USER-AGENT/逻辑规则等 43 条。
 - 注意：同一个文件不能同时被 RULE-SET 和 DOMAIN-SET 引用；本项目的两个成品文件是分开的，不冲突。
 
 ## upstream/（上游快照，2026-11-21 下载）
@@ -33,3 +33,4 @@ RULE-SET,<ads-extra-ruleset.list 的地址>,REJECT
 - 七源 + 粘贴规则共有不重复后缀域名 246,911 个；删去被父后缀覆盖的 5,612 个后，域名集成品 241,413 条。
 - adrules ∩ Loyalsoldier reject = 176,169 条；adrules ∩ anti-AD = 82,939 条（约 anti-AD 的 81%）；anti-AD ∩ Loyalsoldier = 78,339 条。三家互有独占部分，谁也不是谁的子集，所以合并保留全部来源。
 - 用户粘贴规则的 437 条域名条目 100% 已被上游合并集覆盖（其 23 条 DOMAIN-KEYWORD 已并入附加规则集）；custom/pasted-ads.list 仅作原始对照保留。
+- 2026-11-22 并入第八个来源：用户旧合并拦截表「碎」（617,531 行）的独有部分——其 234,438 个唯一后缀中，12,759 个未被原合并集覆盖，另有精确域名 1 条、关键字 8 条、通配 1 条，提取为 custom/legacy-sui.list 作为固定来源参与构建。合并后：不重复后缀 259,670 个，删去被父后缀覆盖的 5,638 个，得后缀条目 254,032 条 + 精确条目 115 条，成品合计 254,147 条。
