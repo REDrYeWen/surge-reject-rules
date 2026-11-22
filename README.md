@@ -1,4 +1,4 @@
-# surge-reject-rules（私有）
+# surge-reject-rules
 
 Surge 拦截规则库。与直连库 [surge-direct-rules] 配套使用。整理自个人现有配置，2026-11-21。
 
